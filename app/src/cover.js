@@ -30,6 +30,7 @@ export function renderCover(canvas,state,width,height) {
   canvas.width = width;
   canvas.height = height;
   const c = canvas.getContext('2d');
+  if (!c) throw new Error('A Canvas 2D capable browser is required.');
   const s = width/1080;
   c.fillStyle = '#140d23';
   c.fillRect(0,0,width,height);

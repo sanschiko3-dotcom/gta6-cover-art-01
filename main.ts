@@ -1,5 +1,5 @@
-// Vice Cover Studio packages a private, local-photo collage workshop.
-// A shared canvas renderer creates square, portrait, and widescreen posters.
+// Vice Cover Studio packages its private photo editor and four fresh browser views.
+// Browser-verified PNG canvases cover square, portrait, and widescreen formats.
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
