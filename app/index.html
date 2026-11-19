@@ -1,46 +1,35 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vice Cover Studio</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header><b>VICE <small>COVER STUDIO</small></b><span>LOCAL PHOTOS. CINEMATIC STORIES.</span><button id="export">Export PNG ↗</button></header>
-  <main>
-    <aside>
-      <h5>01 / THE CAST</h5>
-      <h2>Every legend starts somewhere.</h2>
-      <label class="upload">＋ Add photos<input id="upload" type="file" accept="image/*" multiple></label>
-      <p>Or drop photos anywhere. Everything stays on your device.</p>
-      <div id="photos"></div>
-      <h5>02 / THE CUT</h5>
-      <label>Layout<select id="layout"><option value="hero">Hero + side stories</option><option value="columns">Triple exposure</option><option value="strip">Hero + bottom strip</option></select></label>
-      <label>Colour grade<select id="theme"><option>Sunset</option><option>Neon</option><option>Noir</option></select></label>
-      <label>Export size<select id="size"><option>1080x1080</option><option>1080x1350</option><option>1920x1080</option></select></label>
-      <p>● OFFLINE BY DESIGN<br>No accounts. Just your story.</p>
-    </aside>
-    <section>
-      <nav>THE POSTER / LIVE PREVIEW <span id="dimensions"></span></nav>
-      <div class="stage"><canvas id="cover" aria-label="Poster preview; drag to crop"></canvas></div>
-      <nav>DRAG TO REFRAME · SCROLL TO ZOOM <span>ORIGINAL SERIES / 01</span></nav>
-    </section>
-    <aside>
-      <h5>03 / THE HEADLINE</h5>
-      <h2>Make a little trouble.</h2>
-      <label>Title<input id="title" maxlength="60"></label>
-      <label>Subtitle<input id="subtitle" maxlength="100"></label>
-      <label>Placement<select id="position"><option value="bottom">Bottom billing</option><option value="top">Top billing</option></select></label>
-      <hr><h5>04 / THE CLOSE-UP</h5>
-      <h3 id="selected">Panel 01</h3>
-      <p>Click a panel, then a photo to assign it.</p>
-      <label>Zoom<input id="zoom" type="range" min="0.5" max="4" step="0.01" value="1"></label>
-      <button id="fit">Fit / Fill</button><button id="reset">Reset crop</button>
-      <p id="status" role="status">Ready for your next bad idea.</p>
-    </aside>
-  </main>
-  <footer>VICE COVER STUDIO / AN ORIGINAL POSTER WORKSHOP</footer>
-  <script type="module" src="src/main.js"></script>
-</body>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vice Cover Studio</title>
+<link rel="stylesheet" href="style.css">
+<header><b>VICE<span> / COVER STUDIO</span></b><small>LOCAL PHOTOS. LEGENDARY NIGHTS.</small><button id="export">Export PNG ↗</button></header>
+<main>
+<aside>
+<p class="eyebrow">01 / THE CAST</p>
+<h2>Your city.<br>Your story.</h2>
+<label class="upload">+ Add photos<input id="upload" type="file" accept="image/*" multiple></label>
+<p>Drop photos anywhere. Everything stays on your device.</p>
+<div id="photos"></div>
+<p class="eyebrow">02 / COMPOSITION</p>
+<label>Layout<select id="layout"><option value="hero">Hero + side panels</option><option value="columns">Three columns</option><option value="strip">Hero + bottom strip</option></select></label>
+<label>Color story<select id="theme"><option>Sunset</option><option>Neon</option><option>Noir</option></select></label>
+<label>Export size<select id="size"><option>1080x1080</option><option>1080x1350</option><option>1920x1080</option></select></label>
+</aside>
+<section class="stage"><div class="stagebar"><span>LIVE COVER / <b id="panelName">PANEL 01</b></span><span>DRAG TO FRAME · SCROLL TO ZOOM</span></div><canvas id="cover"></canvas><footer>ORIGINAL STORIES FROM THE OTHER SIDE OF PARADISE <span>✦ VICE EDITION / 001</span></footer></section>
+<aside>
+<p class="eyebrow">03 / THE HEADLINE</p>
+<label>Title<input id="title" value="Sunset Heist" maxlength="45"></label>
+<label>Subtitle<input id="subtitle" value="No rules. Just the coast." maxlength="80"></label>
+<label>Placement<select id="position"><option value="bottom">Bottom</option><option value="top">Top</option></select></label>
+<p class="eyebrow">04 / FRAME THE SHOT</p>
+<p>Click a panel, then a photo to assign it.</p>
+<label>Zoom<input id="zoom" type="range" min="0.5" max="4" step="0.01" value="1"></label>
+<button id="fit">Fit / Fill</button><button id="reset">Reset crop</button>
+<div class="note">AFTER HOURS<br><strong>Made for your<br>main character era.</strong><p>Three frames. One unforgettable night.</p></div>
+<p id="status" role="status">Ready when you are.</p>
+</aside>
+</main>
+<script type="module" src="src/main.js"></script>
 </html>

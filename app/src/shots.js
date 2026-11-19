@@ -1,17 +1,12 @@
-export function readScene() {
-  const p = new URLSearchParams(location.search);
-  return {
-    mode: p.get('shot'),
-    photo: p.get('photo') === 'boulevard' ? 'boulevard' : 'pier',
-    title: p.get('caption') || 'Sunset Heist',
-    layout: ['hero','columns','strip'].includes(p.get('layout')) ? p.get('layout') : 'hero',
-    size: ['1080x1080','1080x1350','1920x1080'].includes(p.get('size')) ? p.get('size') : '1080x1080',
-  };
-}
-
-export async function loadPhoto(src, name) {
-  const image = new Image();
-  image.src = src;
-  await image.decode();
-  return { image, src, name };
+export async function prepareScene(state) {
+  const q=new URLSearchParams(location.search);
+  for(const name of ['pier','boulevard']) {
+    const image=new Image(); image.src=`samples/${name}.jpg`; await image.decode();
+    state.photos.push({name,image});
+  }
+  const photo=q.get('photo')==='boulevard'?1:0;
+  state.panels.forEach((p,i)=>p.photo=i===1?1-photo:photo);
+  for(const key of ['layout','size']) if(q.has(key)) state[key]=q.get(key);
+  if(q.has('caption')) state.title=q.get('caption');
+  if(q.get('shot')==='cover') document.body.classList.add('cover-only');
 }
