@@ -1,12 +1,34 @@
-export async function prepareScene(state) {
-  const q=new URLSearchParams(location.search);
-  for(const name of ['pier','boulevard']) {
-    const image=new Image(); image.src=`samples/${name}.jpg`; await image.decode();
-    state.photos.push({name,image});
+export const formats = {
+  '1080x1080': [1080,1080],
+  '1080x1350': [1080,1350],
+  '1920x1080': [1920,1080],
+};
+
+export function configureShot(state, layouts, grades) {
+  const params = new URLSearchParams(location.search);
+  const scene = params.get('shot');
+  if (scene !== 'cover' && scene !== 'editor') return false;
+  const layout = params.get('layout');
+  const grade = params.get('grade');
+  const size = params.get('size');
+  const photo = params.get('photo');
+  if (Object.hasOwn(layouts,layout)) state.layout = layout;
+  if (Object.hasOwn(grades,grade)) state.grade = grade;
+  if (Object.hasOwn(formats,size)) state.format = size;
+  if (params.has('caption')) state.title = params.get('caption').slice(0,55);
+  const heat = Number(params.get('heat'));
+  if (params.has('heat') && Number.isFinite(heat)) state.heat = Math.max(0,Math.min(5,Math.round(heat)));
+  if (photo === 'pier' || photo === 'boulevard') {
+    state.panels[0].photo = photo;
+    state.panels[1].photo = photo === 'pier' ? 'boulevard' : 'pier';
+    state.panels[2].photo = photo;
+    if (state.layout === 'slash') {
+      state.panels[1].y = .31;
+      state.panels[2].fit = true;
+      state.panels[2].zoom = .99;
+      state.panels[2].x = .28;
+    }
   }
-  const photo=q.get('photo')==='boulevard'?1:0;
-  state.panels.forEach((p,i)=>p.photo=i===1?1-photo:photo);
-  for(const key of ['layout','size']) if(q.has(key)) state[key]=q.get(key);
-  if(q.has('caption')) state.title=q.get('caption');
-  if(q.get('shot')==='cover') document.body.classList.add('cover-only');
+  if (scene === 'cover') document.body.classList.add('proof');
+  return scene === 'cover';
 }

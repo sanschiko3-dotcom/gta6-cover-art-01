@@ -1,6 +1,5 @@
-// Vice Cover Studio packages its offline photo collage editor and four browser captures.
-// Local verification uses MAKEFUN_OUTPUT_DIR; grading defaults to /output.
-// The dossier is constructed with the competition's published resource limits.
+// Package the Vice Cover Studio v2 editor and four Chromium captures.
+// The dossier uses the contest caps for app files, source text, and screenshots.
 import { cpSync, mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';

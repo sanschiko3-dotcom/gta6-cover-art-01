@@ -1,35 +1,72 @@
 <!doctype html>
 <html lang="en">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vice Cover Studio</title>
-<link rel="stylesheet" href="style.css">
-<header><b>VICE<span> / COVER STUDIO</span></b><small>LOCAL PHOTOS. LEGENDARY NIGHTS.</small><button id="export">Export PNG ↗</button></header>
-<main>
-<aside>
-<p class="eyebrow">01 / THE CAST</p>
-<h2>Your city.<br>Your story.</h2>
-<label class="upload">+ Add photos<input id="upload" type="file" accept="image/*" multiple></label>
-<p>Drop photos anywhere. Everything stays on your device.</p>
-<div id="photos"></div>
-<p class="eyebrow">02 / COMPOSITION</p>
-<label>Layout<select id="layout"><option value="hero">Hero + side panels</option><option value="columns">Three columns</option><option value="strip">Hero + bottom strip</option></select></label>
-<label>Color story<select id="theme"><option>Sunset</option><option>Neon</option><option>Noir</option></select></label>
-<label>Export size<select id="size"><option>1080x1080</option><option>1080x1350</option><option>1920x1080</option></select></label>
-</aside>
-<section class="stage"><div class="stagebar"><span>LIVE COVER / <b id="panelName">PANEL 01</b></span><span>DRAG TO FRAME · SCROLL TO ZOOM</span></div><canvas id="cover"></canvas><footer>ORIGINAL STORIES FROM THE OTHER SIDE OF PARADISE <span>✦ VICE EDITION / 001</span></footer></section>
-<aside>
-<p class="eyebrow">03 / THE HEADLINE</p>
-<label>Title<input id="title" value="Sunset Heist" maxlength="45"></label>
-<label>Subtitle<input id="subtitle" value="No rules. Just the coast." maxlength="80"></label>
-<label>Placement<select id="position"><option value="bottom">Bottom</option><option value="top">Top</option></select></label>
-<p class="eyebrow">04 / FRAME THE SHOT</p>
-<p>Click a panel, then a photo to assign it.</p>
-<label>Zoom<input id="zoom" type="range" min="0.5" max="4" step="0.01" value="1"></label>
-<button id="fit">Fit / Fill</button><button id="reset">Reset crop</button>
-<div class="note">AFTER HOURS<br><strong>Made for your<br>main character era.</strong><p>Three frames. One unforgettable night.</p></div>
-<p id="status" role="status">Ready when you are.</p>
-</aside>
-</main>
-<script type="module" src="src/main.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Vice Cover Studio v2</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./src/main.js"></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><b>VICE</b> COVER STUDIO <small>V2</small></a>
+    <div class="actions">
+      <button id="undo" title="Ctrl+Z">↶ Undo</button>
+      <button id="redo" title="Ctrl+Shift+Z">↷ Redo</button>
+      <button id="surprise">✦ Surprise Me</button>
+    </div>
+  </header>
+  <main>
+    <aside>
+      <section>
+        <h2>Composition</h2>
+        <div id="layouts" class="choices"></div>
+        <h2>Color grade</h2>
+        <div id="grades" class="choices"></div>
+      </section>
+      <section>
+        <h2>Photo library</h2>
+        <div id="library" aria-label="Available photos"></div>
+        <label class="upload">＋ Add photos<input id="upload" type="file" accept="image/*" multiple></label>
+      </section>
+    </aside>
+    <div class="workspace">
+      <div class="stage" id="stage">
+        <canvas id="cover" tabindex="0" aria-label="Cover preview. Select a panel and use arrow keys to pan."></canvas>
+      </div>
+      <section class="output">
+        <h2>Export format</h2>
+        <div id="formats" class="actions"></div>
+        <div class="actions">
+          <button id="export" class="primary">Export PNG ↓</button>
+          <button id="all">Export all 3 sizes</button>
+        </div>
+        <p id="status" role="status"></p>
+      </section>
+    </div>
+    <aside class="inspector">
+      <section>
+        <h2>Lettering</h2>
+        <label>Title<input id="title" maxlength="55"></label>
+        <label>Subtitle<input id="subtitle" maxlength="45"></label>
+        <label>Quote<input id="quote" maxlength="80"></label>
+        <label>Tags<input id="tags" maxlength="65"></label>
+        <div class="split">
+          <label>Position<select id="position"><option value="bottom">Bottom</option><option value="top">Top</option></select></label>
+          <label>Size<select id="letterSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
+        </div>
+        <label class="check"><input id="over" type="checkbox"> Title over art</label>
+        <label>Heat <output id="heatValue"></output><input type="range" id="heat" min="0" max="5"></label>
+      </section>
+      <section>
+        <h2 id="panelLabel">Panel crop</h2>
+        <label>Zoom <output id="zoomValue"></output><input type="range" id="zoom" min="1" max="4" step=".01"></label>
+        <div class="actions">
+          <button id="fit">Fit</button><button id="fill">Fill</button><button id="reset">Reset crop</button>
+        </div>
+      </section>
+    </aside>
+  </main>
+</body>
 </html>
