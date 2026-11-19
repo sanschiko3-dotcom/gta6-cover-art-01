@@ -4,8 +4,36 @@
 
 # Vice Cover Studio
 
-An offline sunset poster studio. Load local photos, select a panel, assign a photo, drag to pan and scroll to zoom. Choose three layouts, three themes and three PNG export sizes. Fit or fill each panel and edit both caption lines. Photos stay on your machine.
+An offline poster workshop for original neon crime-fiction covers.
+Bring local photos, arrange three panels, and write your headline.
+No accounts, build step, remote fonts, or photo uploads.
 
-Run `node serve.ts --port 8091` and open localhost:8091. No build or network dependencies. Sample photos were supplied by the kit. All decorative artwork is drawn by the renderer.
+## Run
 
-Package with `MAKEFUN_OUTPUT_DIR=/tmp/gta6-out node main.ts`.
+Use Node.js 22.18 or newer: `node serve.ts --port 8080`.
+Open http://127.0.0.1:8080 in desktop Chrome.
+
+## Make a poster
+
+1. Add images or drop them into the window.
+2. Click a panel, then a thumbnail to assign its image.
+3. Drag to pan; scroll or use Zoom. Fit / Fill changes framing.
+4. Choose a layout and Sunset, Neon, or Noir grading.
+5. Edit title, subtitle, and top or bottom placement.
+6. Choose square, portrait, or widescreen and export PNG.
+
+Exports are 1080 × 1080, 1080 × 1350, or 1920 × 1080.
+The renderer draws original palms, skyline, halftone, and lettering.
+The two sample photos are the kit's freely usable images.
+No Rockstar artwork, logos, characters, or fonts are included.
+
+## Scenes
+
+Use `?shot=cover&photo=pier&caption=Sunset%20Heist&layout=hero&size=1080x1080`.
+Use `?shot=editor&photo=boulevard&caption=Boulevard%20Queen` for the editor.
+Layouts: hero, columns, strip. Readiness: `window.__shotReady`.
+
+## Package
+
+Run `MAKEFUN_OUTPUT_DIR=/tmp/gta6-out node main.ts` to build the dossier.
+The implementation uses the root MIT license.

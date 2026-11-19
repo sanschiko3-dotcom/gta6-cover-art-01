@@ -1,1 +1,46 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vice Cover Studio</title><link rel="stylesheet" href="style.css"></head><body><header><a class="brand" href="./">VICE<span> / </span>COVER STUDIO<small>AFTER HOURS DESIGN DEPARTMENT</small></a><div class="private">● &nbsp; OFFLINE BY DESIGN · YOUR PHOTOS STAY YOURS</div><button id="export">Export cover ↗</button></header><main><aside><div class="eyebrow">01 / THE MATERIAL</div><h2>Every city has<br>a story. Make yours.</h2><label class="upload">＋ Add your photos<input id="files" type="file" accept="image/*" multiple hidden></label><p class="hint">Drop images anywhere · JPG, PNG, WebP</p><div id="photos"></div><div class="eyebrow">02 / THE COMPOSITION</div><h3>Choose your frame</h3><div class="choices" id="layouts"><button data-value="hero">▥<br>Hero</button><button data-value="columns">▥<br>Triptych</button><button data-value="strip">▤<br>Panorama</button></div><h3>Color story</h3><div class="choices" id="themes"><button data-value="Sunset">🌅 Sunset</button><button data-value="Neon">◉ Neon</button><button data-value="Noir">◐ Noir</button></div><div class="eyebrow">03 / THE HEADLINE</div><label>Title<input id="title" value="SUNSET HEIST" maxlength="45"></label><label>Supporting line<input id="subtitle" value="GOOD TIMES. BAD DECISIONS." maxlength="75"></label><label>Title placement<select id="position"><option value="bottom">Bottom / classic</option><option value="top">Top / editorial</option></select></label></aside><section class="stage"><div class="stagebar"><span>LIVE CANVAS <b> / </b> <span id="format">1080 × 1080</span></span><span>DRAG TO REFRAME · SCROLL TO ZOOM</span></div><div class="canvaswrap"><canvas id="cover" width="1080" height="1080"></canvas></div><footer><span>VICE STORIES <b>VOL. 001</b></span><span>ORIGINAL ART. MAIN CHARACTER ENERGY.</span></footer></section><aside class="right"><div class="eyebrow">THE FINISHING TOUCHES</div><h2>In the frame.</h2><div class="panelnumber">PANEL <span id="panel">01</span><small>Click any panel to edit it</small></div><label>Crop zoom <input id="zoom" type="range" min="0.5" max="4" step="0.01" value="1"></label><div class="choices"><button id="fill">Fill panel</button><button id="fit">Fit photo</button><button id="reset">Reset</button></div><p class="hint">Select a photo on the left to assign it to this panel. One photo, many perspectives.</p><hr><h3>Ready for the feed</h3><div id="sizes"><button data-value="1080x1080">Square <span>1:1</span></button><button data-value="1080x1350">Portrait <span>4:5</span></button><button data-value="1920x1080">Widescreen <span>16:9</span></button></div><div class="note">✦<h3>Made for your next<br>legendary night.</h3><p>No uploads. No accounts.<br>Just your story, in full color.</p></div><p id="status" role="status">All changes saved in this session</p></aside></main><script type="module" src="src/main.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vice Cover Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><b>VICE <small>COVER STUDIO</small></b><span>LOCAL PHOTOS. CINEMATIC STORIES.</span><button id="export">Export PNG ↗</button></header>
+  <main>
+    <aside>
+      <h5>01 / THE CAST</h5>
+      <h2>Every legend starts somewhere.</h2>
+      <label class="upload">＋ Add photos<input id="upload" type="file" accept="image/*" multiple></label>
+      <p>Or drop photos anywhere. Everything stays on your device.</p>
+      <div id="photos"></div>
+      <h5>02 / THE CUT</h5>
+      <label>Layout<select id="layout"><option value="hero">Hero + side stories</option><option value="columns">Triple exposure</option><option value="strip">Hero + bottom strip</option></select></label>
+      <label>Colour grade<select id="theme"><option>Sunset</option><option>Neon</option><option>Noir</option></select></label>
+      <label>Export size<select id="size"><option>1080x1080</option><option>1080x1350</option><option>1920x1080</option></select></label>
+      <p>● OFFLINE BY DESIGN<br>No accounts. Just your story.</p>
+    </aside>
+    <section>
+      <nav>THE POSTER / LIVE PREVIEW <span id="dimensions"></span></nav>
+      <div class="stage"><canvas id="cover" aria-label="Poster preview; drag to crop"></canvas></div>
+      <nav>DRAG TO REFRAME · SCROLL TO ZOOM <span>ORIGINAL SERIES / 01</span></nav>
+    </section>
+    <aside>
+      <h5>03 / THE HEADLINE</h5>
+      <h2>Make a little trouble.</h2>
+      <label>Title<input id="title" maxlength="60"></label>
+      <label>Subtitle<input id="subtitle" maxlength="100"></label>
+      <label>Placement<select id="position"><option value="bottom">Bottom billing</option><option value="top">Top billing</option></select></label>
+      <hr><h5>04 / THE CLOSE-UP</h5>
+      <h3 id="selected">Panel 01</h3>
+      <p>Click a panel, then a photo to assign it.</p>
+      <label>Zoom<input id="zoom" type="range" min="0.5" max="4" step="0.01" value="1"></label>
+      <button id="fit">Fit / Fill</button><button id="reset">Reset crop</button>
+      <p id="status" role="status">Ready for your next bad idea.</p>
+    </aside>
+  </main>
+  <footer>VICE COVER STUDIO / AN ORIGINAL POSTER WORKSHOP</footer>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

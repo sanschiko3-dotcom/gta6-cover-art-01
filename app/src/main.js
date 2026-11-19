@@ -1,5 +1,126 @@
-import {renderCover,panelRects} from './cover.js';import {shotOptions} from './shots.js';
-const $=s=>document.querySelector(s),shot=shotOptions(),canvas=$('#cover');const state={photos:[],panels:Array.from({length:3},(_,i)=>({photo:i%2,x:0,y:0,zoom:1,fit:false})),layout:shot.layout,theme:'Sunset',title:shot.title,subtitle:'GOOD TIMES. BAD DECISIONS.',position:'bottom',size:shot.size,selected:0};window.studio=state;
-function draw(){const [w,h]=state.size.split('x').map(Number);renderCover(canvas,state,w,h);$('#format').textContent=`${w} × ${h}`;$('#panel').textContent=String(state.selected+1).padStart(2,'0');$('#zoom').value=state.panels[state.selected].zoom;for(const [id,value] of [['layouts',state.layout],['themes',state.theme],['sizes',state.size]])document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.toggle('active',b.dataset.value===value));}
-async function addPhoto(src,name){const image=new Image();image.src=src;await image.decode();state.photos.push({image,name});const b=document.createElement('button');b.title='Assign '+name+' to selected panel';const thumb=image.cloneNode();thumb.alt=name;b.append(thumb);b.onclick=()=>{state.panels[state.selected].photo=state.photos.findIndex(p=>p.image===image);draw()};$('#photos').append(b)}
-await addPhoto('samples/'+shot.photo+'.jpg',shot.photo);await addPhoto('samples/'+(shot.photo==='pier'?'boulevard':'pier')+'.jpg','Second perspective');$('#title').value=state.title;for(const id of ['title','subtitle','position'])$('#'+id).oninput=e=>{state[id]=e.target.value;draw()};for(const [id,key] of [['layouts','layout'],['themes','theme'],['sizes','size']])$('#'+id).onclick=e=>{const b=e.target.closest('button');if(b){state[key]=b.dataset.value;draw()}};$('#zoom').oninput=e=>{state.panels[state.selected].zoom=+e.target.value;draw()};for(const fit of ['fit','fill'])$('#'+fit).onclick=()=>{state.panels[state.selected].fit=fit==='fit';draw()};$('#reset').onclick=()=>{Object.assign(state.panels[state.selected],{x:0,y:0,zoom:1,fit:false});draw()};async function upload(files){for(const file of files)if(file.type.startsWith('image/')){const url=URL.createObjectURL(file);await addPhoto(url,file.name);state.panels[state.selected].photo=state.photos.length-1}draw()}$('#files').onchange=e=>upload(e.target.files);document.ondragover=e=>e.preventDefault();document.ondrop=e=>{e.preventDefault();upload(e.dataTransfer.files)};let drag;canvas.onpointerdown=e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;state.selected=panelRects(state.layout).findIndex(([a,b,w,h])=>x>=a&&x<=a+w&&y>=b&&y<=b+h);if(state.selected<0)state.selected=0;drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);draw()};canvas.onpointermove=e=>{if(!drag)return;const r=canvas.getBoundingClientRect(),p=state.panels[state.selected],rect=panelRects(state.layout)[state.selected];p.x+=(e.clientX-drag.x)/r.width/rect[2];p.y+=(e.clientY-drag.y)/r.height/rect[3];drag={x:e.clientX,y:e.clientY};draw()};canvas.onpointerup=()=>drag=null;canvas.onwheel=e=>{e.preventDefault();const p=state.panels[state.selected];p.zoom=Math.max(.5,Math.min(4,p.zoom-e.deltaY*.001));draw()};window.exportCover=()=>new Promise(resolve=>{const out=document.createElement('canvas'),[w,h]=state.size.split('x').map(Number);renderCover(out,state,w,h);out.toBlob(blob=>{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='vice-'+state.size+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#status').textContent='Exported '+state.size+' PNG';resolve({width:w,height:h,bytes:blob.size})},'image/png')});$('#export').onclick=window.exportCover;if(shot.scene==='cover'){document.body.classList.add('shot');document.body.append(canvas)}draw();window.__shotReady=true;
+import {renderCover,panelRects} from './cover.js';
+import {readScene,loadPhoto} from './shots.js';
+
+const $=id=>document.getElementById(id);
+const scene=readScene();
+const canvas=$('cover');
+const state={
+  photos:[],
+  panels:Array.from({length:3},(_,i)=>({photo:i%2,x:0,y:0,zoom:1,fit:false})),
+  selected:0,
+  layout:scene.layout,
+  theme:'Sunset',
+  title:scene.title,
+  subtitle:'ONE LAST NIGHT. NO SECOND CHANCES.',
+  position:'bottom',
+  size:scene.size,
+};
+function paint() {
+  const [w,h]=state.size.split('x').map(Number);
+  renderCover(canvas,state,w,h);
+  $('dimensions').textContent=`${w} × ${h}`;
+  $('selected').textContent=`Panel 0${state.selected+1}`;
+  $('zoom').value=state.panels[state.selected].zoom;
+}
+function thumbnails() {
+  $('photos').replaceChildren();
+  state.photos.forEach((photo,i)=>{
+    const button=document.createElement('button');
+    const img=document.createElement('img');
+    img.src=photo.src;
+    img.alt=photo.name;
+    button.title=`Assign ${photo.name}`;
+    button.append(img);
+    button.onclick=()=>{
+      state.panels[state.selected].photo=i;
+      paint();
+    };
+    $('photos').append(button);
+  });
+}
+async function addFiles(files) {
+  for(const file of files) {
+    if(!file.type.startsWith('image/')) continue;
+    try {
+      state.photos.push(await loadPhoto(URL.createObjectURL(file),file.name));
+      state.panels[state.selected].photo=state.photos.length-1;
+    } catch {
+      $('status').textContent='Could not read image. Try PNG or JPG.';
+    }
+  }
+  thumbnails();
+  paint();
+}
+$('upload').onchange=e=>addFiles(e.target.files);
+document.ondragover=e=>e.preventDefault();
+document.ondrop=e=>{
+  e.preventDefault();
+  addFiles(e.dataTransfer.files);
+};
+for(const key of ['layout','theme','title','subtitle','position','size']) {
+  $(key).value=state[key];
+  $(key).oninput=e=>{
+    state[key]=e.target.value;
+    paint();
+  };
+}
+$('zoom').oninput=e=>{
+  state.panels[state.selected].zoom=Number(e.target.value);
+  paint();
+};
+$('fit').onclick=()=>{
+  const p=state.panels[state.selected];
+  p.fit=!p.fit;
+  $('fit').textContent=p.fit?'Fit ✓ / Fill':'Fit / Fill ✓';
+  paint();
+};
+$('reset').onclick=()=>{
+  Object.assign(state.panels[state.selected],{x:0,y:0,zoom:1,fit:false});
+  paint();
+};
+let drag;
+canvas.onpointerdown=e=>{
+  const r=canvas.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  state.selected=Math.max(0,panelRects(state.layout).findIndex(([a,b,w,h])=>x>=a&&x<=a+w&&y>=b&&y<=b+h));
+  drag={x:e.clientX,y:e.clientY};
+  canvas.setPointerCapture(e.pointerId);
+  paint();
+};
+canvas.onpointermove=e=>{
+  if(!drag) return;
+  const r=canvas.getBoundingClientRect(),p=state.panels[state.selected];
+  const bounds=panelRects(state.layout)[state.selected];
+  p.x+=(e.clientX-drag.x)/(r.width*bounds[2]);
+  p.y+=(e.clientY-drag.y)/(r.height*bounds[3]);
+  drag={x:e.clientX,y:e.clientY};
+  paint();
+};
+canvas.onpointerup=canvas.onpointercancel=()=>{drag=null;};
+canvas.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const p=state.panels[state.selected];
+  p.zoom=Math.max(.5,Math.min(4,p.zoom-e.deltaY*.001));
+  paint();
+},{passive:false});
+$('export').onclick=()=>{
+  paint();
+  canvas.toBlob(blob=>{
+    if(!blob) return;
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;
+    a.download=`vice-cover-${state.size}.png`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    $('status').textContent=`Exported ${state.size} PNG.`;
+  },'image/png');
+};
+state.photos=await Promise.all([
+  loadPhoto(`samples/${scene.photo}.jpg`,scene.photo),
+  loadPhoto(`samples/${scene.photo==='pier'?'boulevard':'pier'}.jpg`,'Alternate scene'),
+]);
+if(scene.mode==='cover') document.body.classList.add('cover-only');
+thumbnails();
+paint();
+window.__shotReady=true;
+window.__studio={state,paint};

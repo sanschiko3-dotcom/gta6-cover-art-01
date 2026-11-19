@@ -1,5 +1,5 @@
-// Vice Cover Studio: an offline multi-panel sunset poster workshop.
-// Verified browser PNG exports: square, portrait, and widescreen; package four browser-made views.
+// Vice Cover Studio packages a private, local-photo collage workshop.
+// A shared canvas renderer creates square, portrait, and widescreen posters.
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
