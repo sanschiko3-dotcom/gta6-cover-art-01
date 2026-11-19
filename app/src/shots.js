@@ -1,34 +1,26 @@
-export const formats = {
-  '1080x1080': [1080,1080],
-  '1080x1350': [1080,1350],
-  '1920x1080': [1920,1080],
+const SHOT_DEFAULTS = {
+  layout: 'hero', grade: 'Sunset', size: '1920x1080', caption: 'SUNSET HEIST', photo: 'boulevard', heat: 4
 };
 
-export function configureShot(state, layouts, grades) {
-  const params = new URLSearchParams(location.search);
-  const scene = params.get('shot');
-  if (scene !== 'cover' && scene !== 'editor') return false;
-  const layout = params.get('layout');
-  const grade = params.get('grade');
-  const size = params.get('size');
-  const photo = params.get('photo');
-  if (Object.hasOwn(layouts,layout)) state.layout = layout;
-  if (Object.hasOwn(grades,grade)) state.grade = grade;
-  if (Object.hasOwn(formats,size)) state.format = size;
-  if (params.has('caption')) state.title = params.get('caption').slice(0,55);
-  const heat = Number(params.get('heat'));
-  if (params.has('heat') && Number.isFinite(heat)) state.heat = Math.max(0,Math.min(5,Math.round(heat)));
-  if (photo === 'pier' || photo === 'boulevard') {
-    state.panels[0].photo = photo;
-    state.panels[1].photo = photo === 'pier' ? 'boulevard' : 'pier';
-    state.panels[2].photo = photo;
-    if (state.layout === 'slash') {
-      state.panels[1].y = .31;
-      state.panels[2].fit = true;
-      state.panels[2].zoom = .99;
-      state.panels[2].x = .28;
-    }
-  }
-  if (scene === 'cover') document.body.classList.add('proof');
-  return scene === 'cover';
+function readInteger(value, fallback) {
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0 ? number : fallback;
+}
+
+export function readShotConfig(search = window.location.search) {
+  const params = new URLSearchParams(search);
+  const shotName = params.get('shot');
+  if (!shotName) return { mode: 'editor', ...SHOT_DEFAULTS };
+  const dimensions = (params.get('size') || SHOT_DEFAULTS.size).match(/^(\d+)x(\d+)$/);
+  return {
+    mode: shotName === 'cover' ? 'cover' : 'editor',
+    layout: params.get('layout') || SHOT_DEFAULTS.layout,
+    grade: params.get('grade') || SHOT_DEFAULTS.grade,
+    size: dimensions ? `${dimensions[1]}x${dimensions[2]}` : SHOT_DEFAULTS.size,
+    width: dimensions ? readInteger(dimensions[1], 1920) : 1920,
+    height: dimensions ? readInteger(dimensions[2], 1080) : 1080,
+    caption: params.get('caption') || SHOT_DEFAULTS.caption,
+    photo: params.get('photo') || SHOT_DEFAULTS.photo,
+    heat: Math.max(0, Math.min(5, Number(params.get('heat') ?? SHOT_DEFAULTS.heat)))
+  };
 }

@@ -3,70 +3,103 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="data:,">
-  <title>Vice Cover Studio v2</title>
+  <meta name="theme-color" content="#100d19">
+  <title>Vice Cover Studio — Poster Lab</title>
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./src/main.js"></script>
 </head>
 <body>
-  <header>
-    <a class="brand" href="./"><b>VICE</b> COVER STUDIO <small>V2</small></a>
-    <div class="actions">
-      <button id="undo" title="Ctrl+Z">↶ Undo</button>
-      <button id="redo" title="Ctrl+Shift+Z">↷ Redo</button>
-      <button id="surprise">✦ Surprise Me</button>
-    </div>
-  </header>
-  <main>
-    <aside>
-      <section>
-        <h2>Composition</h2>
-        <div id="layouts" class="choices"></div>
-        <h2>Color grade</h2>
-        <div id="grades" class="choices"></div>
-      </section>
-      <section>
-        <h2>Photo library</h2>
-        <div id="library" aria-label="Available photos"></div>
-        <label class="upload">＋ Add photos<input id="upload" type="file" accept="image/*" multiple></label>
-      </section>
-    </aside>
-    <div class="workspace">
-      <div class="stage" id="stage">
-        <canvas id="cover" tabindex="0" aria-label="Cover preview. Select a panel and use arrow keys to pan."></canvas>
+  <div class="studio" id="studio">
+    <header class="topbar">
+      <a class="brand" href="#studio" aria-label="Vice Cover Studio home">
+        <span class="brand-mark">VC</span>
+        <span><b>VICE COVER</b><small>STUDIO · POSTER LAB</small></span>
+      </a>
+      <div class="top-meta"><span class="live-dot"></span> LOCAL SESSION <i></i> 01 / 08</div>
+      <div class="top-actions">
+        <button class="quiet-button" id="undoButton" aria-label="Undo" title="Undo · Ctrl+Z">↶ <span>Undo</span></button>
+        <button class="quiet-button" id="redoButton" aria-label="Redo" title="Redo · Ctrl+Shift+Z">↷ <span>Redo</span></button>
+        <button class="surprise-button" id="surpriseButton"><span>✦</span> Surprise me</button>
       </div>
-      <section class="output">
-        <h2>Export format</h2>
-        <div id="formats" class="actions"></div>
-        <div class="actions">
-          <button id="export" class="primary">Export PNG ↓</button>
-          <button id="all">Export all 3 sizes</button>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar">
+        <section class="side-section library-section">
+          <div class="section-heading"><div><span class="step">01</span><h2>Photo roll</h2></div><span class="count-pill" id="photoCount">02</span></div>
+          <p class="section-note">Your images stay on this device.</p>
+          <div class="photo-library" id="photoLibrary" aria-label="Photo library"></div>
+          <label class="upload-tile" for="photoUpload"><span class="upload-icon">＋</span><span><b>Add photos</b><small>JPG, PNG · multiple files</small></span><input id="photoUpload" type="file" accept="image/*" multiple></label>
+        </section>
+
+        <section class="side-section layout-section">
+          <div class="section-heading"><div><span class="step">02</span><h2>Composition</h2></div><span class="selected-label" id="panelLabel">PANEL 01</span></div>
+          <div class="layout-grid" id="layoutGrid">
+            <button class="layout-choice active" data-layout="hero"><span class="layout-icon icon-hero"><i></i><i></i></span><b>Hero</b></button>
+            <button class="layout-choice" data-layout="columns"><span class="layout-icon icon-columns"><i></i><i></i><i></i></span><b>Columns</b></button>
+            <button class="layout-choice" data-layout="strip"><span class="layout-icon icon-strip"><i></i><i></i></span><b>Strip</b></button>
+            <button class="layout-choice" data-layout="slash"><span class="layout-icon icon-slash"><i></i><i></i></span><b>Slash</b></button>
+            <button class="layout-choice" data-layout="grid"><span class="layout-icon icon-grid"><i></i><i></i><i></i><i></i></span><b>Grid</b></button>
+            <button class="layout-choice" data-layout="duo"><span class="layout-icon icon-duo"><i></i><i></i></span><b>Duo</b></button>
+            <button class="layout-choice" data-layout="triptych"><span class="layout-icon icon-triptych"><i></i><i></i><i></i></span><b>Triptych</b></button>
+            <button class="layout-choice" data-layout="tilted"><span class="layout-icon icon-tilted"><i></i><i></i></span><b>Tilted</b></button>
+          </div>
+          <div class="crop-box">
+            <div class="crop-head"><span>Selected panel crop</span><button class="text-button" id="resetCrop">Reset</button></div>
+            <div class="crop-row"><span>Zoom</span><input id="zoomSlider" type="range" min="1" max="2.5" step="0.01" value="1.12"><output id="zoomValue">112%</output></div>
+            <div class="crop-row fit-row"><button class="fit-toggle active" data-fit="fill">Fill</button><button class="fit-toggle" data-fit="fit">Fit</button><span class="drag-hint">DRAG TO REFRAME</span></div>
+          </div>
+        </section>
+
+        <section class="side-section grade-section">
+          <div class="section-heading"><div><span class="step">03</span><h2>Color story</h2></div></div>
+          <div class="grade-list" id="gradeList">
+            <button class="grade-choice active" data-grade="Sunset"><span class="grade-swatch swatch-sunset"></span><span>Sunset</span><i>●</i></button>
+            <button class="grade-choice" data-grade="Neon"><span class="grade-swatch swatch-neon"></span><span>Neon</span><i>●</i></button>
+            <button class="grade-choice" data-grade="Noir"><span class="grade-swatch swatch-noir"></span><span>Noir</span><i>●</i></button>
+            <button class="grade-choice" data-grade="Golden Hour"><span class="grade-swatch swatch-golden"></span><span>Golden Hour</span><i>●</i></button>
+            <button class="grade-choice" data-grade="Vice Pink"><span class="grade-swatch swatch-pink"></span><span>Vice Pink</span><i>●</i></button>
+            <button class="grade-choice" data-grade="Teal Dawn"><span class="grade-swatch swatch-teal"></span><span>Teal Dawn</span><i>●</i></button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="stage-column">
+        <div class="stage-toolbar">
+          <div><span class="eyebrow">COVER PREVIEW</span><span class="stage-title" id="stageLayoutName">HERO COMPOSITION</span></div>
+          <div class="stage-tools"><span class="aspect-tag" id="aspectTag">16:9</span><label class="size-select-label">EXPORT SIZE<select id="sizeSelect"><option value="1920x1080">Wide · 1920 × 1080</option><option value="1080x1080">Square · 1080 × 1080</option><option value="1080x1350">Portrait · 1080 × 1350</option></select></label></div>
         </div>
-        <p id="status" role="status"></p>
-      </section>
-    </div>
-    <aside class="inspector">
-      <section>
-        <h2>Lettering</h2>
-        <label>Title<input id="title" maxlength="55"></label>
-        <label>Subtitle<input id="subtitle" maxlength="45"></label>
-        <label>Quote<input id="quote" maxlength="80"></label>
-        <label>Tags<input id="tags" maxlength="65"></label>
-        <div class="split">
-          <label>Position<select id="position"><option value="bottom">Bottom</option><option value="top">Top</option></select></label>
-          <label>Size<select id="letterSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
+        <div class="canvas-stage" id="canvasStage">
+          <canvas id="coverCanvas" width="1280" height="720" aria-label="Live poster preview"></canvas>
+          <div class="stage-caption"><span class="stage-pin"></span><span>LIVE CANVAS</span><span class="stage-divider"></span><span id="stageCaption">SUNSET HEIST</span></div>
         </div>
-        <label class="check"><input id="over" type="checkbox"> Title over art</label>
-        <label>Heat <output id="heatValue"></output><input type="range" id="heat" min="0" max="5"></label>
+        <div class="stage-footer"><span><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> nudge crop</span><span>POSTER RATIO <b id="ratioText">16:9 WIDE</b></span><span><i class="offline-icon">◉</i> OFFLINE READY</span></div>
       </section>
-      <section>
-        <h2 id="panelLabel">Panel crop</h2>
-        <label>Zoom <output id="zoomValue"></output><input type="range" id="zoom" min="1" max="4" step=".01"></label>
-        <div class="actions">
-          <button id="fit">Fit</button><button id="fill">Fill</button><button id="reset">Reset crop</button>
+
+      <aside class="inspector">
+        <div class="inspector-heading"><div><span class="step">04</span><h2>Poster copy</h2></div><span class="autosave"><i></i> LIVE</span></div>
+        <label class="field-label" for="titleInput">COVER TITLE <span>OVER ART</span></label>
+        <input class="title-field" id="titleInput" maxlength="34" value="SUNSET HEIST" autocomplete="off">
+        <label class="field-label" for="subtitleInput">NEON SCRIPT SUBTITLE</label>
+        <input class="text-field script-field" id="subtitleInput" maxlength="40" value="Vice City, after dark" autocomplete="off">
+        <div class="field-pair"><label class="field-label" for="quoteInput">QUOTE LINE<input class="text-field" id="quoteInput" maxlength="68" value="No rules after the sun goes down." autocomplete="off"></label></div>
+        <label class="field-label" for="tagsInput">STORY TAGS <span>UP TO 3</span></label>
+        <input class="text-field" id="tagsInput" maxlength="55" value="#VICE  #LEONIDA  #AFTERHOURS" autocomplete="off">
+        <div class="title-options"><span>Title treatment</span><label class="switch"><input id="titleOverToggle" type="checkbox" checked><span></span></label><b>Over the art</b></div>
+        <div class="heat-heading"><label for="heatSlider">HEAT METER</label><span id="heatValue">04 / 05</span></div>
+        <input id="heatSlider" class="heat-slider" type="range" min="0" max="5" step="1" value="4">
+        <div class="heat-stars" id="heatStars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <div class="position-control"><span>TITLE POSITION</span><div><button class="position-choice active" data-position="bottom">LOWER THIRD</button><button class="position-choice" data-position="top">TOP EDGE</button></div></div>
+        <div class="export-card">
+          <div class="export-title"><span class="export-icon">↗</span><div><b>Make it shareable</b><small>PNG · crisp at every size</small></div></div>
+          <button class="export-button" id="exportButton">Export PNG <span>↗</span></button>
+          <button class="export-all-button" id="exportAllButton">Export all 3 sizes <span>↓</span></button>
+          <p>1080 × 1080 · 1080 × 1350 · 1920 × 1080</p>
         </div>
-      </section>
-    </aside>
-  </main>
+        <p class="privacy-note"><span>◈</span> Your photos never leave your device.</p>
+      </aside>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
 </body>
 </html>

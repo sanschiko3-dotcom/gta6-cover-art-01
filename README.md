@@ -4,10 +4,19 @@
 
 # Vice Cover Studio v2
 
-Make a neon photo poster with eight panel layouts, six grades, and custom lettering. All rendering and photo handling happen in your browser.
+Vice Cover Studio is an offline, canvas-first poster lab for making original neon Vice City cover art from local photos. It keeps the photo roll in the browser, gives every panel its own crop, and exports square, portrait, and wide PNGs.
 
-Run `node serve.ts --port 8080` with Node 22+ and open `http://127.0.0.1:8080`.
+## Included
 
-1. Add photos or use the sample library. Select a panel, then pick a photo.
-2. Drag or use the arrow keys to pan. Scroll over the cover or use the zoom slider to resize the crop.
-3. Edit the lettering and select an export size, or download all three PNGs together. Use Ctrl+Z and Ctrl+Shift+Z to revisit edits.
+- Eight collage compositions: Hero, Columns, Strip, Slash, Grid, Duo, Triptych, and Tilted.
+- Six skin-safe color stories, title-over-art lettering, badge ribbon, quote, tags, palm band, and a five-star heat meter.
+- Local sample photos, multi-file uploads, panel assignment, drag-to-pan, wheel zoom, Fill/Fit, Reset, keyboard nudging, Surprise Me, and 20-step undo/redo.
+- Deterministic `?shot=cover` and `?shot=editor` scenes for review.
+
+## Run locally
+
+```sh
+node serve.ts --port 8080
+```
+
+Open `http://127.0.0.1:8080/`. No build step, remote request, external font, or upload service is used. The app's art is original canvas work and contains no game logos or official artwork.
