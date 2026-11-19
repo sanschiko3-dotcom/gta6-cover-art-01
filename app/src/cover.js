@@ -1,3 +1,5 @@
+// Vice Cover Studio v2 renderer: 8 panel layouts, 6 skin-safe grades,
+// halftone title block, heat-meter stars, palm band. Canvas only, no network.
 export const layouts = {
   hero: 'Hero + side', columns: 'Three columns', strip: 'Hero + strip', slash: 'Slash',
   grid: '2 × 2 Grid', duo: 'Duo', triptych: 'Triptych', tilted: 'Tilted snapshots',

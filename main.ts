@@ -1,4 +1,5 @@
 // Package the Vice Cover Studio v2 editor and four Chromium captures.
+// Verified exports: PNG 1080x1080, 1080x1350, 1920x1080 (plus "Export all 3 sizes").
 // The dossier uses the contest caps for app files, source text, and screenshots.
 import { cpSync, mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
