@@ -1,35 +1,5 @@
-// Draws the cover: the photo filling the square, a sunset tint rising from the bottom, and the caption in bold
-// white capitals along the foot.
-
-/** Draws `photo` (an image, or null) and `caption` onto the canvas's 2D context, at the canvas's own size. */
-export function drawCover(canvas, photo, caption) {
-  const ctx = canvas.getContext('2d');
-  const { width: w, height: h } = canvas;
-  ctx.fillStyle = '#2b1838';
-  ctx.fillRect(0, 0, w, h);
-  if (photo) {
-    const scale = Math.max(w / photo.naturalWidth, h / photo.naturalHeight);
-    const pw = photo.naturalWidth * scale;
-    const ph = photo.naturalHeight * scale;
-    ctx.drawImage(photo, (w - pw) / 2, (h - ph) / 2, pw, ph);
-  }
-  const tint = ctx.createLinearGradient(0, h * 0.35, 0, h);
-  tint.addColorStop(0, 'rgba(255, 120, 80, 0)');
-  tint.addColorStop(1, 'rgba(200, 40, 120, 0.65)');
-  ctx.fillStyle = tint;
-  ctx.fillRect(0, 0, w, h);
-  const text = caption.trim().toUpperCase();
-  if (!text) return;
-  let size = h * 0.12;
-  ctx.font = `bold ${size}px sans-serif`;
-  while (ctx.measureText(text).width > w * 0.9 && size > 12) {
-    size -= 2;
-    ctx.font = `bold ${size}px sans-serif`;
-  }
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#ffffff';
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-  ctx.shadowBlur = size * 0.2;
-  ctx.fillText(text, w / 2, h - h * 0.07);
-  ctx.shadowBlur = 0;
-}
+export function panelRects(layout){return layout==='columns'?[[0,0,.34,1],[.34,0,.33,1],[.67,0,.33,1]]:layout==='strip'?[[0,0,1,.68],[0,.68,.5,.32],[.5,.68,.5,.32]]:[[0,0,.65,1],[.65,0,.35,.5],[.65,.5,.35,.5]];}
+function palm(c,x,y,s){c.save();c.translate(x,y);c.scale(s,s);c.fillStyle='#151326';c.beginPath();c.moveTo(-5,0);c.quadraticCurveTo(12,-75,0,-140);c.lineTo(8,-140);c.quadraticCurveTo(27,-65,9,0);c.fill();for(let i=0;i<7;i++){c.save();c.translate(4,-138);c.rotate(i*.67-2.1);c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(45,-35,80,15);c.quadraticCurveTo(40,-7,0,0);c.fill();c.restore()}c.restore()}
+export function renderCover(canvas,state,width,height){canvas.width=width;canvas.height=height;const c=canvas.getContext('2d'),W=1080,H=height/width*1080;c.scale(width/W,width/W);c.fillStyle='#100e1c';c.fillRect(0,0,W,H);const rects=panelRects(state.layout);rects.forEach((r,i)=>{let [x,y,w,h]=r.map((v,j)=>v*(j%2?H:W));const gap=7;x+=gap;y+=gap;w-=gap*2;h-=gap*2;c.save();c.beginPath();c.rect(x,y,w,h);c.clip();const g=c.createLinearGradient(0,y,0,y+h);g.addColorStop(0,'#7a3b8e');g.addColorStop(.5,'#fb9568');g.addColorStop(1,'#261838');c.fillStyle=g;c.fillRect(x,y,w,h);c.fillStyle='#ffd38c';c.beginPath();c.arc(x+w*.73,y+h*.24,Math.min(w,h)*.16,0,Math.PI*2);c.fill();const p=state.panels[i],img=state.photos[p.photo]?.image;if(img){const scale=(p.fit?Math.min(w/img.width,h/img.height):Math.max(w/img.width,h/img.height))*p.zoom;const iw=img.width*scale,ih=img.height*scale;c.filter=state.theme==='Noir'?'grayscale(1) contrast(1.3)':'saturate(1.35) contrast(1.13)';c.drawImage(img,x+(w-iw)/2+p.x*w,y+(h-ih)/2+p.y*h,iw,ih);c.filter='none'}c.globalCompositeOperation='soft-light';c.fillStyle=g;c.fillRect(x,y,w,h);c.globalCompositeOperation='source-over';c.fillStyle=state.theme==='Neon'?'#ad30d322':'#f6668126';c.fillRect(x,y,w,h);const shade=c.createLinearGradient(0,y,0,y+h);shade.addColorStop(0,'#120c2820');shade.addColorStop(.55,'#190d1600');shade.addColorStop(1,'#160f32c0');c.fillStyle=shade;c.fillRect(x,y,w,h);c.strokeStyle='#f9b99866';c.lineWidth=2;c.strokeRect(x+4,y+4,w-8,h-8);c.restore()});
+c.save();c.globalAlpha=.18;c.fillStyle='#130c24';for(let y=0;y<H;y+=7)for(let x=0;x<W;x+=7)if((x+y)%3===0){c.beginPath();c.arc(x,y,.85,0,7);c.fill()}c.restore();palm(c,40,H*.8,1.5);palm(c,1015,H*.9,1.25);c.fillStyle='#171224';for(let i=0;i<30;i++){let h=12+(Math.sin(i*13)+1)*22;c.fillRect(i*39,H-40-h,30,h+40)}const vignette=c.createRadialGradient(540,H*.45,180,540,H*.5,H*.8);vignette.addColorStop(0,'#0000');vignette.addColorStop(1,'#090415aa');c.fillStyle=vignette;c.fillRect(0,0,W,H);
+c.textAlign='left';c.fillStyle='#ffdbc1';c.font='bold 15px Arial';c.fillText('VICE STORIES   /   A SOUTH COAST ORIGINAL',35,42);c.textAlign='right';c.fillText('VOL. 001',1045,42);const base=state.position==='top'?H*.27:H*.77;let words=(state.title||'YOUR STORY').toUpperCase().split(/\s+/),lines=words.length>1?[words.slice(0,Math.ceil(words.length/2)).join(' '),words.slice(Math.ceil(words.length/2)).join(' ')]:words;let fs=Math.min(160,H*.15);do{c.font=`900 ${fs--}px "Arial Black",Arial,sans-serif`}while(lines.some(l=>c.measureText(l).width>W*.89)&&fs>20);c.textAlign='center';c.lineJoin='round';lines.forEach((l,i)=>{let y=base+(i-(lines.length-1)/2)*fs*.91;c.save();c.translate(540,y);c.transform(1,-.055,-.12,1,0,0);c.shadowColor='#08091b';c.shadowOffsetX=9;c.shadowOffsetY=13;c.lineWidth=19;c.strokeStyle='#100f23';c.strokeText(l,0,0);c.shadowOffsetX=0;c.shadowOffsetY=0;c.lineWidth=9;c.strokeStyle='#ffdfb1';c.strokeText(l,0,0);const t=c.createLinearGradient(0,-fs,0,0);t.addColorStop(0,state.theme==='Neon'?'#b9ffff':'#fff0bd');t.addColorStop(1,state.theme==='Noir'?'#b1a9b4':'#ff866f');c.fillStyle=t;c.fillText(l,0,0);c.restore()});c.fillStyle='#fff0d5';c.font='bold 18px Arial';while(c.measureText((state.subtitle||'').toUpperCase()).width>950){const n=parseFloat(c.font);c.font=`bold ${n>8?n-1:8}px Arial`;if(!(n>8))break}c.fillText((state.subtitle||'').toUpperCase(),540,base+fs*.8);c.font='bold 12px Arial';c.fillStyle='#f3b3a2';c.fillText('THE COAST IS YOURS.   •   MAKE IT LEGENDARY.',540,H-23);return rects;}
